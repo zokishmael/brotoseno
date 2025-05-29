@@ -1,0 +1,58 @@
+Buat file utilitas di utils/formatTanggal.js:
+==========
+export const formatTanggalLengkap = (tanggal) => {
+  if (!tanggal) return '-';
+  
+  try {
+    const [tahun, bulan, hari] = tanggal.split('-');
+    const date = new Date(tahun, bulan - 1, hari);
+    
+    return date.toLocaleDateString('id-ID', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  } catch (error) {
+    console.error('Format tanggal invalid:', tanggal);
+    return '-';
+  }
+};
+==========
+Modifikasi di halaman utama (app/page.js):
+// Tambahkan import di bagian atas
+import { formatTanggal } from '../utils/formatTanggal';
+
+// Di bagian hasil pencarian
+<p>{item.tmpt_lhr}, {formatTanggalLengkap(item.tgl_lhr)}</p>
+==========
+Modifikasi di halaman detail (app/detail/[nik]/page.js):
+// Tambahkan import di bagian atas
+import { formatTanggal } from '../utils/formatTanggal';
+
+// Di bagian data tanggal lahir
+'Tgl. Lahir': capitalizeFirstLetter(formatTanggalLengkap(data.tgl_lhr)),
+==========
+Tambahkan fungsi kapitalisasi di halaman detail:
+const capitalizeFirstLetter = (str) => {
+  return str.replace(/\b\w/g, (char) => char.toUpperCase());
+};
+==========
+Fitur ini akan:
+
+Menampilkan nama hari dalam bahasa Indonesia
+Menggunakan format "24 November 1984"
+Kapitalisasi huruf pertama setiap kata
+Menangani error jika format tanggal tidak valid
+Untuk format yang lebih spesifik:
+==========
+// Jika ingin format "Senin, 24 Jan 1978"
+date.toLocaleDateString('id-ID', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric'
+});
+
+// Hasil: "Senin, 24 Jan 1978"
+==========

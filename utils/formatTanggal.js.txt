@@ -1,0 +1,47 @@
+Berikut cara mengubah format tanggal lahir menjadi DD-MM-YYYY di semua tampilan:
+==========================================
+Buat utility function di utils/formatTanggal.js:
+==========================================
+export const formatTanggal = (tanggal) => {
+  if (!tanggal) return '-';
+  
+  try {
+    const [tahun, bulan, hari] = tanggal.split('-');
+    return `${hari}-${bulan}-${tahun}`;
+  } catch (error) {
+    console.error('Format tanggal invalid:', tanggal);
+    return '-';
+  }
+};
+==========================================
+Modifikasi halaman utama (app/page.js):
+==========================================
+// Tambahkan import di bagian atas
+import { formatTanggal } from '../utils/formatTanggal';
+
+// Di bagian hasil pencarian, ubah:
+<p>{item.tmpt_lhr}, {item.tgl_lhr}</p>
+// Menjadi:
+<p>{item.tmpt_lhr}, {formatTanggal(item.tgl_lhr)}</p>
+==========================================
+Modifikasi halaman detail (app/detail/[nik]/page.js):
+==========================================
+// Tambahkan import di bagian atas
+import { formatTanggal } from '../../../utils/formatTanggal';
+
+// Di bagian entri tanggal lahir, ubah:
+'Tanggal Lahir': data.tgl_lhr,
+// Menjadi:
+'Tanggal Lahir': formatTanggal(data.tgl_lhr),
+==========================================
+opsi Untuk format alternatif (dd/mm/yyyy dengan separator khusus):
+
+// Di utils/formatTanggal.js
+return `${hari}/${bulan}/${tahun}`; // Hasil: 24/11/1984
+
+Hasil yang akan ditampilkan:
+
+Tempat Lahir: RUNGGUNAN, 24-11-1984
+
+
+
